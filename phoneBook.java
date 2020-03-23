@@ -19,7 +19,7 @@ public class phoneBook extends JFrame implements ActionListener {
     private JButton save;
     private JButton exit;
     JTextField TFmail, TFsurname, TFphone_number;
-    int rows = 5;
+    int rows = 4;
 
     public static Connection connect() {
         try {
@@ -40,18 +40,18 @@ public class phoneBook extends JFrame implements ActionListener {
         return c;
     }
 
-    Connection c = connect();
+    public static Connection c = connect();
 
     public static void createTable(Connection c) throws SQLException {
         Statement stmt = c.createStatement();
-        stmt.executeUpdate("CREATE TABLE tabelkaa(name VARCHAR(64), mail VARCHAR(64), nr INTEGER);");
+        stmt.executeUpdate("CREATE TABLE tabel(name VARCHAR(64), mail VARCHAR(64), nr INTEGER);");
     }
 
     public static void fillTableWithData(Connection c) throws SQLException {
         Statement stmt = c.createStatement();
-        stmt.executeUpdate(" INSERT INTO tabelkaa VALUES ('Alicja', 'alicja20@gmail.com', '123456789');");
-        stmt.executeUpdate(" INSERT INTO tabelkaa VALUES ('Marek', 'marek253@onet.pl', '754938125');");
-        stmt.executeUpdate(" INSERT INTO tabelkaa VALUES ('Anna', 'ania@interia.pl', '674209678');");
+        stmt.executeUpdate(" INSERT INTO tabel VALUES ('Alicja', 'alicja20@gmail.com', '123456789');");
+        stmt.executeUpdate(" INSERT INTO tabel VALUES ('Marek', 'marek253@onet.pl', '754938125');");
+        stmt.executeUpdate(" INSERT INTO tabel VALUES ('Anna', 'ania@interia.pl', '674209678');");
     }
 
     public static void initDB(Connection c) throws SQLException { //if u want to initialize a new dataBase
@@ -83,35 +83,35 @@ public class phoneBook extends JFrame implements ActionListener {
         this.pack();
     }
 
-    public void wyswietl() throws SQLException {
+    public void print() throws SQLException {
         JFrame f1 = new JFrame("Showing database");
-        JPanel panelik = new JPanel();
-        panelik.setLayout(new GridLayout(rows, 3));
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(rows, 3));
 
         Statement stmt = c.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM tabelkaa");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM tabel");
         while(rs.next()) {
             String name = rs.getString("name");
             String mail = rs.getString("mail");
             String nr = rs.getString("nr");
-            panelik.add(new JLabel(name));
-            panelik.add(new JLabel(mail));
-            panelik.add(new JLabel(nr));
+            panel.add(new JLabel(name));
+            panel.add(new JLabel(mail));
+            panel.add(new JLabel(nr));
         }
         rs.close();
         stmt.close();
 
-        f1.getContentPane().add(panelik);
+        f1.getContentPane().add(panel);
         f1.setSize(500,300);
         f1.setLocationRelativeTo(null);
         f1.setVisible(true);
     }
 
-    public void dodaj(){
+    public void add(){
         JFrame f1 = new JFrame("Adding a new record");
-        JPanel panelik = new JPanel();
+        JPanel panel = new JPanel();
         JLabel mail = new JLabel("Mail: ");
-        JLabel nazwisko = new JLabel("Surname: ");
+        JLabel surname = new JLabel("Surname: ");
         JLabel nr_tel = new JLabel("Phone number: ");
 
         TFmail = new JTextField("mail address");
@@ -119,73 +119,73 @@ public class phoneBook extends JFrame implements ActionListener {
         TFphone_number = new JTextField("phone number");
         addD = new JButton("Add a new record");
         addD.addActionListener(this);
-        panelik.add(nazwisko);
-        panelik.add(TFsurname);
-        panelik.add(mail);
-        panelik.add(TFmail);
-        panelik.add(mail);
-        panelik.add(TFmail);
-        panelik.add(nr_tel);
-        panelik.add(TFphone_number);
-        panelik.add(addD);
+        panel.add(surname);
+        panel.add(TFsurname);
+        panel.add(mail);
+        panel.add(TFmail);
+        panel.add(mail);
+        panel.add(TFmail);
+        panel.add(nr_tel);
+        panel.add(TFphone_number);
+        panel.add(addD);
 
-        f1.getContentPane().add(panelik);
+        f1.getContentPane().add(panel);
         f1.setSize(500,100);
         f1.setLocationRelativeTo(null);
         f1.setVisible(true);
     }
 
-    public void wyszukaj(){
+    public void search(){
         JFrame f1 = new JFrame("Search for record");
-        JPanel panelik = new JPanel();
-        JLabel nazwisko = new JLabel("Enter the person's surname: ");
+        JPanel panel = new JPanel();
+        JLabel surname = new JLabel("Enter the person's surname: ");
 
         TFsurname = new JTextField("surname");
         searchD = new JButton("Search:");
         searchD.addActionListener(this);
-        panelik.add(nazwisko);
-        panelik.add(TFsurname);
-        panelik.add(searchD);
+        panel.add(surname);
+        panel.add(TFsurname);
+        panel.add(searchD);
 
-        f1.getContentPane().add(panelik);
+        f1.getContentPane().add(panel);
         f1.setSize(500,100);
         f1.setLocationRelativeTo(null);
         f1.setVisible(true);
     }
 
-    public void Iwyszukaj() throws SQLException {
+    public void searchD() throws SQLException {
         JFrame f1 = new JFrame("Searching for a record");
-        JPanel panelik = new JPanel();
-        String Inazwisko = this.TFsurname.getText();
+        JPanel panel = new JPanel();
+        String surname = this.TFsurname.getText();
         Statement stmt = c.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM tabelkaa WHERE name="+"'"+Inazwisko+"'");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM tabel WHERE name="+"'"+surname+"'");
 
-        while(rs.next()) { //wczytanie kolejnego rekordu z bazy
+        while(rs.next()) {
             String name = rs.getString("name");
             String mail = rs.getString("mail");
             String nr = rs.getString("nr");
-            panelik.add(new JLabel(name));
-            panelik.add(new JLabel(mail));
-            panelik.add(new JLabel(nr));
+            panel.add(new JLabel(name));
+            panel.add(new JLabel(mail));
+            panel.add(new JLabel(nr));
         }
-        f1.getContentPane().add(panelik);
+        f1.getContentPane().add(panel);
         f1.setSize(500,100);
         f1.setLocationRelativeTo(null);
         f1.setVisible(true);
     }
-    public void usun() throws SQLException {
+    public void delete() {
         JFrame f1 = new JFrame("Delete a record");
-        JPanel panelik = new JPanel();
+        JPanel panel = new JPanel();
 
-        JLabel nazwisko = new JLabel("Enter the person's surname: ");
+        JLabel surname = new JLabel("Enter the person's surname: ");
         TFsurname = new JTextField("surname");
         deleteD = new JButton("Delete:");
         deleteD.addActionListener(this);
-        panelik.add(nazwisko);
-        panelik.add(TFsurname);
-        panelik.add(deleteD);
+        panel.add(surname);
+        panel.add(TFsurname);
+        panel.add(deleteD);
 
-        f1.getContentPane().add(panelik);
+        f1.getContentPane().add(panel);
         f1.setSize(500,100);
         f1.setLocationRelativeTo(null);
         f1.setVisible(true);
@@ -197,27 +197,27 @@ public class phoneBook extends JFrame implements ActionListener {
         if (source == show) {
             show.setBackground(Color.GREEN);
             try {
-                wyswietl();
+                print();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         } else if (source == add) {
             add.setBackground(Color.GREEN);
-            dodaj();
+            add();
         }
         else if(source == addD) {
             addD.setBackground(Color.GREEN);
-            String Inazwisko = this.TFsurname.getText();
-            System.out.println(Inazwisko);
-            String Imail = this.TFmail.getText();
-            System.out.println(Imail);
+            String surname = this.TFsurname.getText();
+            System.out.println(surname);
+            String mail = this.TFmail.getText();
+            System.out.println(mail);
             int Inr_tel = Integer.valueOf(this.TFphone_number.getText());
             System.out.println(Inr_tel);
 
             try {
                 Statement stmt = c.createStatement();
                 int result = 0;
-                result = stmt.executeUpdate("INSERT INTO tabelkaa (name,mail,nr) VALUES" +  "('"+Inazwisko+"','"+Imail+"','"+Inr_tel+"')");
+                result = stmt.executeUpdate("INSERT INTO tabel (name,mail,nr) VALUES" +  "('"+surname+"','"+mail+"','"+Inr_tel+"')");
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -229,20 +229,16 @@ public class phoneBook extends JFrame implements ActionListener {
 
         else if (source == delete) {
             delete.setBackground(Color.GREEN);
-            try {
-                usun();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            delete();
         }
         else if(source == deleteD) {
             deleteD.setBackground(Color.GREEN);
-            String Inazwisko = this.TFsurname.getText();
+            String surname = this.TFsurname.getText();
             try {
                 Statement stmt = c.createStatement();
-                System.out.println(Inazwisko);
+                System.out.println(surname);
                 int result = 0;
-                result = stmt.executeUpdate("DELETE FROM tabelkaa WHERE name="+"'"+Inazwisko+"'");
+                result = stmt.executeUpdate("DELETE FROM tabel WHERE name="+"'"+surname+"'");
                 System.out.println(result);
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -252,12 +248,12 @@ public class phoneBook extends JFrame implements ActionListener {
 
         else if (source == search){
             search.setBackground(Color.GREEN);
-            wyszukaj();
+            search();
         }
         else if(source == searchD) {
             searchD.setBackground(Color.GREEN);
             try {
-                Iwyszukaj();
+                searchD();
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -269,6 +265,7 @@ public class phoneBook extends JFrame implements ActionListener {
         }
     }
     public static void main(String[] args) throws SQLException {
+        //if you're running this program for the first time you should firstly run "initDB(c);" to initialize a database
 	    phoneBook k = new phoneBook();
         k.setSize(500,300);
         k.setLocationRelativeTo(null);
