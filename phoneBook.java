@@ -8,7 +8,7 @@ import java.sql.*;
 
 public class phoneBook extends JFrame implements ActionListener {
 
-    JPanel p = new JPanel();
+    private JPanel p = new JPanel();
     private JButton show;
     private JButton add;
     private JButton addD;
@@ -16,12 +16,11 @@ public class phoneBook extends JFrame implements ActionListener {
     private JButton deleteD;
     private JButton search;
     private JButton searchD;
-    private JButton save;
     private JButton exit;
-    JTextField TFmail, TFsurname, TFphone_number;
-    int rows = 4;
+    private JTextField TFmail, TFsurname, TFphone_number;
+    private int rows = 4;
 
-    public static Connection connect() {
+    private static Connection connect() {
         try {
             Class.forName("org.hsqldb.jdbcDriver" );
         } catch (Exception e) {
@@ -40,14 +39,14 @@ public class phoneBook extends JFrame implements ActionListener {
         return c;
     }
 
-    public static Connection c = connect();
+    private static Connection c = connect();
 
-    public static void createTable(Connection c) throws SQLException {
+    private static void createTable(Connection c) throws SQLException {
         Statement stmt = c.createStatement();
         stmt.executeUpdate("CREATE TABLE tabel(name VARCHAR(64), mail VARCHAR(64), nr INTEGER);");
     }
 
-    public static void fillTableWithData(Connection c) throws SQLException {
+    private static void fillTableWithData(Connection c) throws SQLException {
         Statement stmt = c.createStatement();
         stmt.executeUpdate(" INSERT INTO tabel VALUES ('Alicja', 'alicja20@gmail.com', '123456789');");
         stmt.executeUpdate(" INSERT INTO tabel VALUES ('Marek', 'marek253@onet.pl', '754938125');");
@@ -66,13 +65,13 @@ public class phoneBook extends JFrame implements ActionListener {
          add = new JButton("Add a new record");
         add.addActionListener(this);
         p.add(add);
-         delete = new JButton("Delete record");
+        delete = new JButton("Delete record");
         delete.addActionListener(this);
         p.add(delete);
-         search = new JButton("Search for record");
+        search = new JButton("Search for record");
         search.addActionListener(this);
         p.add(search);
-         show = new JButton("Print base");
+        show = new JButton("Print base");
         show.addActionListener(this);
         p.add(show);
         exit = new JButton("Exit");
@@ -83,7 +82,7 @@ public class phoneBook extends JFrame implements ActionListener {
         this.pack();
     }
 
-    public void print() throws SQLException {
+    private void print() throws SQLException {
         JFrame f1 = new JFrame("Showing database");
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(rows, 3));
@@ -107,7 +106,7 @@ public class phoneBook extends JFrame implements ActionListener {
         f1.setVisible(true);
     }
 
-    public void add(){
+    private void add(){
         JFrame f1 = new JFrame("Adding a new record");
         JPanel panel = new JPanel();
         JLabel mail = new JLabel("Mail: ");
@@ -135,7 +134,7 @@ public class phoneBook extends JFrame implements ActionListener {
         f1.setVisible(true);
     }
 
-    public void search(){
+    private void search(){
         JFrame f1 = new JFrame("Search for record");
         JPanel panel = new JPanel();
         JLabel surname = new JLabel("Enter the person's surname: ");
@@ -153,7 +152,7 @@ public class phoneBook extends JFrame implements ActionListener {
         f1.setVisible(true);
     }
 
-    public void searchD() throws SQLException {
+    private void searchD() throws SQLException {
         JFrame f1 = new JFrame("Searching for a record");
         JPanel panel = new JPanel();
         String surname = this.TFsurname.getText();
@@ -173,7 +172,7 @@ public class phoneBook extends JFrame implements ActionListener {
         f1.setLocationRelativeTo(null);
         f1.setVisible(true);
     }
-    public void delete() {
+    private void delete() {
         JFrame f1 = new JFrame("Delete a record");
         JPanel panel = new JPanel();
 
@@ -211,21 +210,17 @@ public class phoneBook extends JFrame implements ActionListener {
             System.out.println(surname);
             String mail = this.TFmail.getText();
             System.out.println(mail);
-            int Inr_tel = Integer.valueOf(this.TFphone_number.getText());
+            int Inr_tel = Integer.parseInt(this.TFphone_number.getText());
             System.out.println(Inr_tel);
 
             try {
                 Statement stmt = c.createStatement();
-                int result = 0;
-                result = stmt.executeUpdate("INSERT INTO tabel (name,mail,nr) VALUES" +  "('"+surname+"','"+mail+"','"+Inr_tel+"')");
+                stmt.executeUpdate("INSERT INTO tabel (name,mail,nr) VALUES" +  "('"+surname+"','"+mail+"','"+Inr_tel+"')");
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
             rows++;
         }
-
-        else if (source == save)
-            save.setBackground(Color.GREEN);
 
         else if (source == delete) {
             delete.setBackground(Color.GREEN);
@@ -237,8 +232,7 @@ public class phoneBook extends JFrame implements ActionListener {
             try {
                 Statement stmt = c.createStatement();
                 System.out.println(surname);
-                int result = 0;
-                result = stmt.executeUpdate("DELETE FROM tabel WHERE name="+"'"+surname+"'");
+                int result = stmt.executeUpdate("DELETE FROM tabel WHERE name="+"'"+surname+"'");
                 System.out.println(result);
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -264,9 +258,9 @@ public class phoneBook extends JFrame implements ActionListener {
             System.exit(0);
         }
     }
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args){
         //if you're running this program for the first time you should firstly run "initDB(c);" to initialize a database
-	    phoneBook k = new phoneBook();
+        phoneBook k = new phoneBook();
         k.setSize(500,300);
         k.setLocationRelativeTo(null);
         k.setVisible(true);
